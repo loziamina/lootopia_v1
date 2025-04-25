@@ -1,29 +1,36 @@
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export default function Navbar() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.push('/auth/login');
-  };
+  useEffect(() => {
+    // Vérifier la présence du token uniquement côté client
+    const token = localStorage.getItem('token');
+    console.log('Token dans useEffect:', token); // Log pour vérifier si le token est présent
+    setIsAuthenticated(token !== null); // Si le token existe, l'utilisateur est connecté
+  }, []);
 
-  const isAuthenticated = localStorage.getItem('token') !== null;
+  const handleLogout = () => {
+    // Supprimer le token du localStorage
+    localStorage.removeItem('token');
+    console.log('Token après suppression:', localStorage.getItem('token')); // Log pour vérifier que le token est bien supprimé
+    setIsAuthenticated(false); // Mettre à jour l'état d'authentification
+    router.push('/auth/login'); // Rediriger l'utilisateur vers la page de connexion
+  };
 
   return (
     <nav className="bg-gray-900 p-4 flex justify-between items-center text-white">
       <h1 className="text-2xl font-bold">Lootopia</h1>
       <div className="space-x-4">
-        {!isAuthenticated && (
+        {!isAuthenticated ? (
           <>
             <Link href="/auth/login" className="hover:text-purple-400">Connexion</Link>
             <Link href="/auth/signup" className="hover:text-purple-400">Inscription</Link>
           </>
-        )}
-      </div>
-      <div>
-        {isAuthenticated && (
+        ) : (
           <button onClick={handleLogout} className="hover:text-purple-400">Déconnexion</button>
         )}
       </div>

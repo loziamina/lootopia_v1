@@ -17,9 +17,7 @@ export default function Home() {
         <div className="flex items-center">
           <h1 className="text-2xl font-bold">Bonjour Amina</h1>
         </div>
-        <div className="flex items-center">
-          <button className="text-red-600 hover:text-red-400">Déconnexion</button>
-        </div>
+  
       </div>
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-4">PLAYER MODE</h2>
