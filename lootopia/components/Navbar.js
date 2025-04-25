@@ -7,18 +7,30 @@ export default function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    // Vérifier la présence du token uniquement côté client
+    // Vérifier la présence du token dans le localStorage lors du premier chargement
     const token = localStorage.getItem('token');
-    console.log('Token dans useEffect:', token); // Log pour vérifier si le token est présent
     setIsAuthenticated(token !== null); // Si le token existe, l'utilisateur est connecté
+
+    // Mettre à jour l'état si le token est modifié dans localStorage
+    const handleStorageChange = () => {
+      const updatedToken = localStorage.getItem('token');
+      setIsAuthenticated(updatedToken !== null);
+    };
+
+    // Ajouter un écouteur pour les changements dans le localStorage
+    window.addEventListener('storage', handleStorageChange);
+
+    // Nettoyer l'écouteur lors de la destruction du composant
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const handleLogout = () => {
-    // Supprimer le token du localStorage
+    // Supprimer le token du localStorage et mettre à jour l'état d'authentification
     localStorage.removeItem('token');
-    console.log('Token après suppression:', localStorage.getItem('token')); // Log pour vérifier que le token est bien supprimé
-    setIsAuthenticated(false); // Mettre à jour l'état d'authentification
-    router.push('/auth/login'); // Rediriger l'utilisateur vers la page de connexion
+    setIsAuthenticated(false); // Mettre à jour l'état
+    router.push('/auth/login'); // Rediriger vers la page de connexion
   };
 
   return (
