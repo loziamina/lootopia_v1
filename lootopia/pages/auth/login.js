@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/router';  // Importation pour redirection
+import { useRouter } from 'next/router';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const router = useRouter();  // Utilisation du hook useRouter pour la redirection
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,11 +14,9 @@ export default function Login() {
       const response = await axios.post('/api/auth/login', { email, password });
       const { token } = response.data;
 
-      // Stocker le token JWT dans le localStorage
       localStorage.setItem('token', token);
 
-      // Rediriger l'utilisateur vers la page d'accueil
-      router.push('/');
+      router.push('/home');
     } catch (err) {
       setError('Email ou mot de passe incorrect.');
       console.log('Login error:', err);
