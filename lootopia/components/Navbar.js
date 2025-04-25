@@ -7,30 +7,25 @@ export default function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    // Vérifier la présence du token dans le localStorage lors du premier chargement
     const token = localStorage.getItem('token');
-    setIsAuthenticated(token !== null); // Si le token existe, l'utilisateur est connecté
+    setIsAuthenticated(token !== null); 
 
-    // Mettre à jour l'état si le token est modifié dans localStorage
     const handleStorageChange = () => {
       const updatedToken = localStorage.getItem('token');
       setIsAuthenticated(updatedToken !== null);
     };
 
-    // Ajouter un écouteur pour les changements dans le localStorage
     window.addEventListener('storage', handleStorageChange);
 
-    // Nettoyer l'écouteur lors de la destruction du composant
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
   const handleLogout = () => {
-    // Supprimer le token du localStorage et mettre à jour l'état d'authentification
     localStorage.removeItem('token');
-    setIsAuthenticated(false); // Mettre à jour l'état
-    router.push('/auth/login'); // Rediriger vers la page de connexion
+    setIsAuthenticated(false); 
+    router.push('/auth/login'); 
   };
 
   return (
@@ -43,7 +38,10 @@ export default function Navbar() {
             <Link href="/auth/signup" className="hover:text-purple-400">Inscription</Link>
           </>
         ) : (
+          <>
           <button onClick={handleLogout} className="hover:text-purple-400">Déconnexion</button>
+          <a href="/users/profile" className="hover:text-purple-400">Mon Profil</a> 
+          </>
         )}
       </div>
     </nav>
