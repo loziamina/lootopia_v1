@@ -44,7 +44,7 @@ export default function Profile() {
 
     try {
       const response = await axios.put(
-        '/api/profile',
+        '../api/users/profile',
         { email, firstName, lastName, address, mission },
         { headers: { Authorization: `Bearer ${token}` } }
       );
