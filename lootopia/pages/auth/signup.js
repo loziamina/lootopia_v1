@@ -6,6 +6,8 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -18,9 +20,9 @@ export default function Signup() {
     }
 
     try {
-      const response = await axios.post('/api/auth/signup', { email, password });
+      const response = await axios.post('/api/auth/signup', { email, password, firstName, lastName });
       console.log('User registered:', response.data);
-      router.push('../auth/login'); 
+      router.push('../auth/login');
     } catch (err) {
       setError('Erreur lors de l\'inscription. Essayez à nouveau.');
       console.log('Signup error:', err);
@@ -34,6 +36,30 @@ export default function Signup() {
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
+            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">Prénom</label>
+            <input
+              id="firstName"
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Nom</label>
+            <input
+              id="lastName"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input
               id="email"
@@ -44,6 +70,7 @@ export default function Signup() {
               required
             />
           </div>
+
           <div className="mb-4">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mot de passe</label>
             <input
@@ -55,6 +82,7 @@ export default function Signup() {
               required
             />
           </div>
+
           <div className="mb-6">
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
             <input
@@ -66,6 +94,7 @@ export default function Signup() {
               required
             />
           </div>
+
           <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">S'inscrire</button>
         </form>
       </div>

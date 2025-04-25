@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, password } = req.body;
+    const { email, password, firstName, lastName } = req.body;
 
     try {
       const existingUser = await prisma.user.findUnique({
@@ -20,13 +20,17 @@ export default async function handler(req, res) {
       // Hacher le mot de passe
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      // Créer un nouvel utilisateur
       const newUser = await prisma.user.create({
         data: {
           email: email,
           password: hashedPassword,
+          firstName: firstName,
+          lastName: lastName,
         },
       });
 
+      // Créer un token JWT
       const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, {
         expiresIn: '1h',
       });
