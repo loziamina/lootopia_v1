@@ -30,7 +30,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-gray-900 p-4 flex justify-between items-center text-white">
-      <h1 className="text-2xl font-bold">Lootopia</h1>
+      <h1 className="text-2xl font-bold"><a href='/home'>Lootopia</a></h1>
       <div className="space-x-4">
         {!isAuthenticated ? (
           <>

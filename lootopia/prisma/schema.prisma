@@ -7,16 +7,19 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/prisma-client"
 }
 
-// prisma/schema.prisma
 
+// prisma/schema.prisma
 model User {
-  id        Int    @id @default(autoincrement())
-  email     String @unique
-  password  String
-  firstName String? // rendre ce champ optionnel
-  lastName  String? // rendre ce champ optionnel
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  password         String
+  firstName        String?
+  lastName         String?
+  resetToken       String?  // Ajout du token de réinitialisation
+  resetTokenExpires DateTime? // Ajout de la date d'expiration du token
 }
 
 
