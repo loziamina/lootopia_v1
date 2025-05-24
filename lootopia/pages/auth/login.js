@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import Link from 'next/link'; 
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -53,6 +54,12 @@ export default function Login() {
           </div>
           <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">Se connecter</button>
         </form>
+
+        <div className="mt-4 text-center">
+          <Link href="/auth/forgot-password">
+            <span className="text-sm text-blue-600 hover:underline">Mot de passe oublié ?</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

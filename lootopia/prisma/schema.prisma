@@ -1,0 +1,25 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+// prisma/schema.prisma
+model User {
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  password         String
+  firstName        String?
+  lastName         String?
+  resetToken       String?  // Ajout du token de réinitialisation
+  resetTokenExpires DateTime? // Ajout de la date d'expiration du token
+}
+
+
+

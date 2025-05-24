@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar';  
 import Image from 'next/image';  
 
 export default function Home() {
@@ -9,7 +8,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col justify-between">
-      <Navbar/>
         <main className="flex flex-col justify-center items-center flex-grow">
           <Image 
             src="/images/logo-lootopia.png" 

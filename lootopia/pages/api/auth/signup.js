@@ -1,30 +1,45 @@
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-let users = [
-  { id: 1, email: 'test@lootopia.com', password: 'password123' }, // Exemple d'utilisateur pour tests
-];
+const prisma = new PrismaClient();
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, password } = req.body;
+    const { email, password, firstName, lastName } = req.body;
 
-    // Vérifier si l'email est déjà utilisé
-    const existingUser = users.find(user => user.email === email);
-    if (existingUser) {
-      return res.status(400).json({ message: 'Cet email est déjà utilisé.' });
+    try {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: email },
+      });
+
+      if (existingUser) {
+        return res.status(400).json({ message: 'Cet email est déjà utilisé.' });
+      }
+
+      // Hacher le mot de passe
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Créer un nouvel utilisateur
+      const newUser = await prisma.user.create({
+        data: {
+          email: email,
+          password: hashedPassword,
+          firstName: firstName,
+          lastName: lastName,
+        },
+      });
+
+      // Créer un token JWT
+      const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, {
+        expiresIn: '1h',
+      });
+
+      return res.status(201).json({ message: 'Utilisateur créé avec succès', token });
+    } catch (error) {
+      return res.status(500).json({ message: 'Erreur serveur' });
     }
-
-    // Créer un nouvel utilisateur
-    const newUser = { id: users.length + 1, email, password };
-    users.push(newUser);
-
-    // Créer un token JWT
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    return res.status(201).json({ message: 'Utilisateur créé avec succès', token });
   } else {
-    res.status(405).json({ message: 'Méthode non autorisée' });
+    return res.status(405).json({ message: 'Méthode non autorisée' });
   }
 }
