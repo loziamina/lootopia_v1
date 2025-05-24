@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 export default function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // Vérifie si le code s'exécute côté client
     if (typeof window !== "undefined") {
       const token = localStorage.getItem('token');
       setIsAuthenticated(token !== null);
