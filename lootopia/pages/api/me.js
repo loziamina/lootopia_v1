@@ -14,17 +14,25 @@ export default async function handler(req, res) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
-      select: { firstName: true }, 
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true, 
+      },
     });
 
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
 
-    return res.status(200).json({ firstName: user.firstName });
+    return res.status(200).json(user);
   } catch (error) {
-    return res.status(401).json({ message: 'Token invalide' });
+    console.error('Erreur vérification JWT :', error);
+    return res.status(401).json({ message: 'Token invalide ou expiré' });
   }
 }

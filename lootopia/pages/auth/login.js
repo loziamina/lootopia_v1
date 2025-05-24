@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import Link from 'next/link'; 
+import Link from 'next/link';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -16,6 +17,8 @@ export default function Login() {
       const { token } = response.data;
 
       localStorage.setItem('token', token);
+
+      const decoded = jwtDecode(token);
 
       router.push('/home');
     } catch (err) {

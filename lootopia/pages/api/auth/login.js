@@ -17,9 +17,15 @@ export default async function handler(req, res) {
         return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
       }
 
-      const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-      });
+    const token = jwt.sign(
+      { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role 
+      }, 
+      process.env.JWT_SECRET,
+      { expiresIn: '7d'}
+    );
 
       return res.status(200).json({ token });
     } catch (error) {
