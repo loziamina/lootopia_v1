@@ -130,7 +130,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Public\\B3 sup de vinci\\projet_d'etude\\lootopia_v1\\lootopia\\prisma\\generated\\prisma-client",
+      "value": "C:\\Projet\\lootopia_v1\\lootopia\\prisma\\generated\\prisma-client",
       "fromEnvVar": null
     },
     "config": {
@@ -144,11 +144,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Public\\B3 sup de vinci\\projet_d'etude\\lootopia_v1\\lootopia\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Projet\\lootopia_v1\\lootopia\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../..",
