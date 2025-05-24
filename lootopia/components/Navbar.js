@@ -46,9 +46,9 @@ export default function Navbar() {
             <Link href="/users/profile" className="hover:text-purple-400">Mon Profil</Link>
             {userRole === 'ADMIN' && (
               <>
-                <Link href="/admin/users" className="hover:text-purple-400">Utilisateurs</Link>
-                <Link href="/admin/hunts" className="hover:text-purple-400">Chasses</Link>
-                <Link href="/admin/reviews" className="hover:text-purple-400">Avis</Link>
+                <Link href="/admin/users/" className="hover:text-purple-400">Utilisateurs</Link>
+                <Link href="/admin/hunts/" className="hover:text-purple-400">Chasses</Link>
+                <Link href="/admin/reviews/" className="hover:text-purple-400">Avis</Link>
               </>
             )}
             <button onClick={handleLogout} className="hover:text-purple-400">Déconnexion</button>
