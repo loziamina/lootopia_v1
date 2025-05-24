@@ -30,7 +30,6 @@ export default function Navbar() {
     setUserRole(null);
     router.push('/auth/login');
   };
-
   return (
     <nav className="bg-gray-900 p-4 flex justify-between items-center text-white">
       <h1 className="text-2xl font-bold cursor-pointer" onClick={() => router.push('/home')}>
