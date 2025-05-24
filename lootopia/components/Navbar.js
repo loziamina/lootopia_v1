@@ -51,6 +51,12 @@ export default function Navbar() {
                 <Link href="/admin/reviews/" className="hover:text-purple-400">Avis</Link>
               </>
             )}
+            {userRole === 'USER' && (
+              <>
+                <Link href="/hunts/" className="hover:text-purple-400">Mes Chasses</Link>
+                <Link href="/reviews/" className="hover:text-purple-400">Avis</Link>
+              </>
+            )}
             <button onClick={handleLogout} className="hover:text-purple-400">Déconnexion</button>
           </>
         )}
