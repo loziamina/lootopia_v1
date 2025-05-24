@@ -1,26 +1,31 @@
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const users = [
-  { id: 1, email: 'test@lootopia.com', password: 'password123' }, // Exemple d'utilisateur pour les tests
-];
+const prisma = new PrismaClient();
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
-    const user = users.find((user) => user.email === email && user.password === password);
+    try {
+      const user = await prisma.user.findUnique({
+        where: { email: email },
+      });
 
-    if (!user) {
-      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+      }
+
+      const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+        expiresIn: '1h',
+      });
+
+      return res.status(200).json({ token });
+    } catch (error) {
+      return res.status(500).json({ message: 'Erreur serveur' });
     }
-
-    // Crée un token JWT
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    return res.status(200).json({ token });
   } else {
-    res.status(405).json({ message: 'Méthode non autorisée' });
+    return res.status(405).json({ message: 'Méthode non autorisée' });
   }
 }
