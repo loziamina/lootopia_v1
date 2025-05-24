@@ -17,9 +17,16 @@ model User {
   password         String
   firstName        String?
   lastName         String?
-  resetToken       String?  // Ajout du token de réinitialisation
-  resetTokenExpires DateTime? // Ajout de la date d'expiration du token
+  resetToken       String?
+  resetTokenExpires DateTime?
+  role             Role     @default(USER)  
 }
+
+enum Role {
+  USER
+  ADMIN
+}
+
 
 
 
