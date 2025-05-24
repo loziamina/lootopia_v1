@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -11,42 +10,53 @@ export default function UserListPage() {
   }, []);
 
   const fetchUsers = async () => {
+    const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('/api/admin/users/users');
+      const response = await axios.get('/api/admin/users/users', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers(response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération des utilisateurs :', error);
     }
   };
 
-const deleteUser = async (id) => {
-  const confirmDelete = confirm('Es-tu sûr de vouloir supprimer cet utilisateur ?');
-  if (!confirmDelete) return;
+  const deleteUser = async (id) => {
+    const confirmDelete = confirm('Es-tu sûr de vouloir supprimer cet utilisateur ?');
+    if (!confirmDelete) return;
 
-  const token = localStorage.getItem('token');
-
- try {
-  await axios.delete(`/api/admin/users/${id}/user`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  setUsers(users.filter((u) => u.id !== id)); 
-} catch (error) {
-  console.error('Erreur suppression utilisateur :', error);
-  alert("Une erreur est survenue lors de la suppression.");
-}
-
-};
-
-
-  const promoteUser = async (id) => {
+    const token = localStorage.getItem('token');
     try {
-      await axios.post('/api/admin/users/promote', { id });
+      await axios.delete(`/api/admin/users/${id}/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUsers(users.filter((u) => u.id !== id));
+    } catch (error) {
+      console.error('Erreur suppression utilisateur :', error);
+      alert("Une erreur est survenue lors de la suppression.");
+    }
+  };
+
+  const changeUserRole = async (id, newRole) => {
+    const token = localStorage.getItem('token');
+    try {
+      await axios.post(
+        `/api/admin/users/${id}/role`,
+        { role: newRole },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       fetchUsers();
     } catch (error) {
-      console.error('Erreur lors de la promotion :', error);
+      console.error('Erreur lors du changement de rôle :', error);
+      alert("Impossible de changer le rôle de l'utilisateur.");
     }
   };
 
@@ -75,7 +85,7 @@ const deleteUser = async (id) => {
               <th className="py-3 px-4 text-left">Nom</th>
               <th className="py-3 px-4 text-left">Email</th>
               <th className="py-3 px-4 text-left">Rôle</th>
-              <th className="py-3 px-4">Actions</th>
+              <th className="py-3 px-4 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -88,15 +98,15 @@ const deleteUser = async (id) => {
                     {user.role}
                   </span>
                 </td>
-                <td className="py-3 px-4 flex gap-2 justify-center">
-                  {user.role !== 'ADMIN' && (
-                    <button
-                      onClick={() => promoteUser(user.id)}
-                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition"
-                    >
-                      Promouvoir
-                    </button>
-                  )}
+                <td className="py-3 px-4 flex gap-2 justify-center items-center">
+                  <select
+                    value={user.role}
+                    onChange={(e) => changeUserRole(user.id, e.target.value)}
+                    className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+                  >
+                    <option value="USER">Utilisateur</option>
+                    <option value="ADMIN">Admin</option>
+                  </select>
                   <button
                     onClick={() => deleteUser(user.id)}
                     className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition"
