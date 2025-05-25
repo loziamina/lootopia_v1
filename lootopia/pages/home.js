@@ -48,14 +48,6 @@ export default function Home() {
         <h2 className="text-xl font-semibold mb-4">PLAYER MODE</h2>
         <p className="text-2xl">Bienvenue dans Lootopia</p>
       </div>
-
-      {/* Exemple de carte chasse clickable */}
-      <div
-        className="bg-white p-4 rounded-lg shadow-md w-64 cursor-pointer hover:bg-gray-200"
-        onClick={() => handleChaseClick(2)}
-      >
-      </div>
-
       <UserHuntPage />
     </div>
   );
