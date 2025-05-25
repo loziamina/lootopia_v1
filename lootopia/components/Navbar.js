@@ -32,7 +32,7 @@ export default function Navbar() {
   };
   return (
     <nav className="bg-gray-900 p-4 flex justify-between items-center text-white">
-      <h1 className="text-2xl font-bold cursor-pointer" onClick={() => router.push('/home')}>
+      <h1 className="text-2xl font-bold cursor-pointer" onClick={() => router.push('/')}>
         Lootopia
       </h1>
       <div className="space-x-4">
@@ -43,7 +43,7 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Link href="/users/profile" className="hover:text-purple-400">Mon Profil</Link>
+            <Link href="/profile" className="hover:text-purple-400">Mon Profil</Link>
             {userRole === 'ADMIN' && (
               <>
                 <Link href="/admin/users/" className="hover:text-purple-400">Utilisateurs</Link>

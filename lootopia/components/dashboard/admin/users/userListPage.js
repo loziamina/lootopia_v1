@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
+
 
 export default function UserListPage() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     fetchUsers();
@@ -124,6 +127,15 @@ export default function UserListPage() {
           </tbody>
         </table>
       </div>
+      <div className="flex justify-end mb-6">
+  <button
+    onClick={() => router.push('/admin/users/create')}
+    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+  >
+    + Créer un utilisateur
+  </button>
+</div>
     </div>
+    
   );
 }

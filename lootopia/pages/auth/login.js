@@ -20,7 +20,7 @@ export default function Login() {
 
       const decoded = jwtDecode(token);
 
-      router.push('/home');
+      router.push('/');
     } catch (err) {
       setError('Email ou mot de passe incorrect.');
       console.log('Login error:', err);

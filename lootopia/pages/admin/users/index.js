@@ -1,5 +1,5 @@
 
-import UserListPage from "@/components/dashboard/admin/userListPage";
+import UserListPage from "@/components/dashboard/admin/users/userListPage";
 
 
 export default function AdminUsersPage() {

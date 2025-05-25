@@ -1,22 +1,13 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';  
+import Image from 'next/image';
+import Home from '../components/home';  
 
-export default function Home() {
+export default function HomePage() {
   const router = useRouter();
 
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col justify-between">
-        <main className="flex flex-col justify-center items-center flex-grow">
-          <Image 
-            src="/images/logo-lootopia.png" 
-            alt="Lootopia Logo" 
-            width={192} 
-            height={192} 
-            className="w-48 mb-8" 
-          /> 
-      </main>
-    </div>
+          <Home/>
   );
 }
