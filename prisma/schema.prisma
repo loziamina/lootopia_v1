@@ -5,7 +5,9 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  output   = "./node_modules/.prisma/client" // Spécifiez un chemin valide ici
 }
+
 
 model User {
   id               Int            @id @default(autoincrement())
@@ -36,6 +38,7 @@ model TreasureHunt {
   status      HuntStatus @default(PENDING)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  imageUrl    String?   
 }
 
 enum Role {

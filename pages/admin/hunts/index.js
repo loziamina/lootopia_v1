@@ -69,7 +69,7 @@ export default function AdminHuntPage() {
           >
             {hunt.title}
           </h2>
-          <p className="text-sm text-[#FAF7FF] mb-1">{hunt.description || 'Pas de description'}</p>
+          <p className="text-sm text-[#251B47] mb-1">{hunt.description || 'Pas de description'}</p>
           <p className="text-xs text-[#251B47]">Créée par : {hunt.createdBy?.email || 'Inconnu'}</p>
           <div className="mt-4 flex justify-end gap-2">
             <button

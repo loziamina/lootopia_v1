@@ -10,22 +10,34 @@ export default function CreateHuntPage() {
     location: '',
     startDate: '',
     endDate: '',
-    imageUrl: '',
   });
+  const [image, setImage] = useState(null);
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]); 
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('description', form.description);
+    formData.append('location', form.location);
+    formData.append('startDate', form.startDate);
+    formData.append('endDate', form.endDate);
+    if (image) formData.append('image', image); 
 
     try {
-      await axios.post(`/api/admin/hunts/hunts`, form, {
+      await axios.post('/api/admin/hunts/hunts', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       });
       router.push('/admin/hunts');
@@ -77,6 +89,14 @@ export default function CreateHuntPage() {
           name="endDate"
           value={form.endDate}
           onChange={handleChange}
+          className="w-full border p-3 rounded-md border-[#251B47] focus:ring-2 focus:ring-[#32A67F] transition"
+        />
+        
+        <input
+          type="file"
+          name="image"
+          onChange={handleImageChange}
+          accept="image/png, image/jpg, image/jpeg"
           className="w-full border p-3 rounded-md border-[#251B47] focus:ring-2 focus:ring-[#32A67F] transition"
         />
 
