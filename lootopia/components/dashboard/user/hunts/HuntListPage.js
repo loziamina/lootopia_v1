@@ -48,8 +48,12 @@ export default function userHuntPage() {
               </h2>
               <p className="text-sm text-gray-600 mb-1">{hunt.description || 'Pas de description'}</p>
               <p className="text-xs text-gray-500">Créée par : {hunt.createdBy?.email || 'Inconnu'}</p>
-             
+             <button className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition'
+                onClick={() => router.push(`/user/hunts/${hunt.id}/register`)} >
+                Paticiper
+              </button>
             </div>
+            
           ))}
         </div>
       )}

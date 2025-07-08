@@ -18,6 +18,7 @@ model User {
   role             Role           @default(USER)
 
   createdHunts     TreasureHunt[] @relation("CreatedByUser")
+  registrations    Registration[] // ajout relation inscriptions
 }
 
 model TreasureHunt {
@@ -36,6 +37,18 @@ model TreasureHunt {
   status      HuntStatus @default(PENDING)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  registrations Registration[] // ajout relation inscriptions
+}
+
+model Registration {
+  id        Int          @id @default(autoincrement())
+  fullName  String
+  email     String
+  huntId    Int
+  hunt      TreasureHunt @relation(fields: [huntId], references: [id])
+  userId    Int?
+  user      User?        @relation(fields: [userId], references: [id])
+  createdAt DateTime     @default(now())
 }
 
 enum Role {
