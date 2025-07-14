@@ -61,7 +61,7 @@ export default function ProfileComponent() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="min-h-screen bg-[#1A1A1A] text-white px-6 py-10 ml-64">
+    <div className="bg-[#1A1A1A] text-white ">
   <div className="bg-white text-black p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
     <div className="flex items-center mb-6">
       <div className="w-24 h-24 bg-[#6B3FA0] rounded-full flex justify-center items-center text-4xl text-white shadow-inner">
