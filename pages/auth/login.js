@@ -19,6 +19,7 @@ export default function Login() {
       localStorage.setItem('token', token);
 
       const decoded = jwtDecode(token);
+      localStorage.setItem('userEmail', decoded.email);
 
       router.push('/');
     } catch (err) {

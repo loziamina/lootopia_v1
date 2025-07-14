@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import ReviewForm from '@/components/dashboard/admin/reviews/ReviewForm';
+import ReviewListPage from '@/components/dashboard/admin/reviews/ReviewListPage';
 
 export default function HuntDetailPage() {
   const router = useRouter();
   const { id } = router.query;
   const [hunt, setHunt] = useState(null);
   const [error, setError] = useState('');
+  const [newReview, setNewReview] = useState(null); // ✅ Ajout pour rafraîchir les commentaires
 
   useEffect(() => {
     if (id) fetchHunt();
@@ -20,30 +23,8 @@ export default function HuntDetailPage() {
       });
       setHunt(response.data);
     } catch (err) {
-      console.error('Erreur lors du chargement de la chasse :', err);
+      console.error('Erreur lors de la récupération de la chasse :', err);
       setError('Impossible de charger les détails de la chasse.');
-    }
-  };
-
-  const handleParticipate = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setError('Vous devez être connecté pour participer.');
-      return;
-    }
-
-    try {
-      const response = await axios.post(`/api/users/hunts/${id}/participate`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.status === 200) {
-        // Redirection vers la page de la carte
-        router.push(`/hunts/${id}/map`);
-      }
-    } catch (err) {
-      console.error('Erreur lors de la participation :', err.response || err);
-      setError('Impossible de participer à la chasse.');
     }
   };
 
@@ -53,7 +34,7 @@ export default function HuntDetailPage() {
   return (
     <div className="p-8 min-h-screen bg-gradient-to-br from-[#6B3FA0] to-[#A14CA0]">
       <h1 className="text-3xl font-bold mb-6 text-[#FAF7FF]">Détails de la chasse</h1>
-
+      
       <div className="bg-white rounded-lg shadow p-6 space-y-4">
         <p><strong>Titre :</strong> {hunt.title}</p>
         <p><strong>Description :</strong> {hunt.description || 'Aucune description'}</p>
@@ -67,11 +48,29 @@ export default function HuntDetailPage() {
 
       <div className="mt-6">
         <button
-          onClick={handleParticipate}
-          className="bg-[#6B3FA0] text-white px-4 py-2 rounded hover:bg-[#432B7D] transition"
+          onClick={() => router.push(`/admin/hunts/${id}/edit`)}
+          className="bg-[#32A67F] text-white px-4 py-2 rounded hover:bg-[#251B47] transition"
         >
-          Participer à cette chasse
+          Modifier la chasse
         </button>
+        <button
+          onClick={() => router.push('/admin/hunts')}
+          className="ml-4 bg-[#251B47] text-white px-4 py-2 rounded hover:bg-[#3E2C75] transition"
+        >
+          Retour à la liste
+        </button>
+        <button
+          onClick={() => router.push(`/hunts/${id}/participate`)}
+          className="ml-4 bg-[#251B47] text-white px-4 py-2 rounded hover:bg-[#3E2C75] transition"
+        >
+          Rejoindre la chasse
+        </button>
+      </div>
+
+      <div className="mt-10 bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-bold mb-4">Commentaires</h2>
+        <ReviewForm huntId={id} onReviewAdded={setNewReview} />
+        <ReviewListPage huntId={id} newReview={newReview} />
       </div>
     </div>
   );

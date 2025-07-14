@@ -60,7 +60,9 @@ export default function Navbar() {
 
             {userRole === 'USER' && (
               <>
-                <Link href="users/hunts" className="hover:text-[#F9C449] transition">Mes Chasses</Link>
+                <Link href="/user/hunts" className="hover:text-[#F9C449] transition">Mes Chasses</Link>
+                <Link href="/user/participate" className="hover:text-[#3E2C75] transition">Avis</Link>
+
               </>
             )}
 

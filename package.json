@@ -10,6 +10,7 @@
     "seed:admins": "node scripts/seed-admins.js"
   },
   "dependencies": {
+    "@maptiler/sdk": "^3.5.0",
     "@prisma/client": "^6.11.1",
     "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
@@ -17,6 +18,8 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
+    "leaflet.smooth_marker_bouncing": "^3.1.1",
+    "maplibre-gl": "^5.6.1",
     "multer": "^2.0.1",
     "next": "15.3.1",
     "nodemailer": "^7.0.3",

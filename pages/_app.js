@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import '../styles/globals.css';
 import Navbar from '../components/Navbar';
+import 'leaflet/dist/leaflet.css';
+
 
 function MyApp({ Component, pageProps }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
