@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -9,10 +10,16 @@ export default function Signup() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (password.length < 6) {
+      setError("Le mot de passe doit contenir au moins 6 caractères.");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas.");
@@ -20,83 +27,86 @@ export default function Signup() {
     }
 
     try {
-      const response = await axios.post('/api/auth/signup', { email, password, firstName, lastName });
-      console.log('User registered:', response.data);
-      router.push('../auth/login');
+      const response = await axios.post('/api/auth/signup', {
+        email, password, firstName, lastName,
+      });
+      setSuccess("Inscription réussie. Redirection vers la connexion...");
+      setError('');
+
+      setTimeout(() => {
+        router.push('/auth/login');
+      }, 2000);
     } catch (err) {
-      setError('Erreur lors de l\'inscription. Essayez à nouveau.');
-      console.log('Signup error:', err);
+      setError("Erreur lors de l'inscription. Vérifiez vos informations.");
+      setSuccess('');
+      console.error("Signup error:", err);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-br from-[#1B1B1F] to-[#2A2A2E] flex justify-center items-center">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-4">Inscription</h2>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">Prénom</label>
-            <input
-              id="firstName"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+        <h2 className="text-3xl font-bold mb-4 text-center text-[#251B47]">Créer un compte</h2>
 
-          <div className="mb-4">
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Nom</label>
-            <input
-              id="lastName"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+        {error && <div className="text-red-500 mb-4 text-sm">{error}</div>}
+        {success && <div className="text-green-600 mb-4 text-sm">{success}</div>}
 
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Prénom"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Nom"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Mot de passe"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Confirmer le mot de passe"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            required
+          />
 
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mot de passe</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-
-          <div className="mb-6">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
-            <input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-
-          <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">S'inscrire</button>
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-[#32A67F] text-white rounded-md hover:bg-[#251B47] transition"
+          >
+            S'inscrire
+          </button>
         </form>
+
+        <p className="mt-4 text-sm text-center">
+          Déjà un compte ?{' '}
+          <Link href="/auth/login" className="text-[#32A67F] hover:underline">
+            Se connecter
+          </Link>
+        </p>
       </div>
     </div>
   );

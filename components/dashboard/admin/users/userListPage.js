@@ -67,8 +67,8 @@ export default function UserListPage() {
   );
 
   return (
-    <div className="p-8 min-h-screen bg-gradient-to-r from-[#6B3FA0] to-[#A14CA0]">
-      <h1 className="text-3xl font-bold mb-6 text-center text-white">Liste des utilisateurs</h1>
+    <div className="p-8 min-h-screen bg-[#1B1B1F] text-white">
+      <h1 className="text-3xl font-bold mb-8 text-center text-[#F9C449]">👥 Gestion des utilisateurs</h1>
 
       <div className="mb-6 max-w-md mx-auto">
         <input
@@ -76,12 +76,12 @@ export default function UserListPage() {
           placeholder="Rechercher par email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full p-3 border border-[#432B7D] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3E2C75]"
+          className="w-full p-3 bg-[#2B2B30] text-white border border-[#5C3E9E] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A892FE]"
         />
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg">
+      <div className="overflow-x-auto bg-[#2A2A2E] rounded-lg shadow-lg">
+        <table className="min-w-full">
           <thead className="bg-[#3E2C75] text-white">
             <tr>
               <th className="py-3 px-4 text-left">Nom</th>
@@ -92,11 +92,11 @@ export default function UserListPage() {
           </thead>
           <tbody>
             {filteredUsers.map((user) => (
-              <tr key={user.id} className="border-t hover:bg-[#FAF7FF] transition">
+              <tr key={user.id} className="border-t border-[#444] hover:bg-[#3A2D58] transition">
                 <td className="py-3 px-4">{user.firstName} {user.lastName}</td>
                 <td className="py-3 px-4">{user.email}</td>
                 <td className="py-3 px-4">
-                  <span className={`px-2 py-1 rounded text-white text-sm ${user.role === 'ADMIN' ? 'bg-[#32A67F]' : 'bg-[#251B47]'}`}>
+                  <span className={`px-2 py-1 rounded text-white text-sm ${user.role === 'ADMIN' ? 'bg-[#32A67F]' : 'bg-[#5C3E9E]'}`}>
                     {user.role}
                   </span>
                 </td>
@@ -104,14 +104,14 @@ export default function UserListPage() {
                   <select
                     value={user.role}
                     onChange={(e) => changeUserRole(user.id, e.target.value)}
-                    className="text-sm px-2 py-1 border border-[#432B7D] rounded-md"
+                    className="text-sm px-2 py-1 bg-[#252525] text-white border border-[#5C3E9E] rounded"
                   >
                     <option value="USER">Utilisateur</option>
                     <option value="ADMIN">Admin</option>
                   </select>
                   <button
                     onClick={() => deleteUser(user.id)}
-                    className="px-3 py-1 bg-[#D24D79] text-white text-sm rounded hover:bg-[#F9C449] transition"
+                    className="px-3 py-1 bg-[#D24D79] hover:bg-[#F9C449] text-white text-sm font-semibold rounded transition"
                   >
                     Supprimer
                   </button>
@@ -120,19 +120,21 @@ export default function UserListPage() {
             ))}
             {filteredUsers.length === 0 && (
               <tr>
-                <td colSpan="4" className="text-center py-4 text-[#251B47]">Aucun utilisateur trouvé.</td>
+                <td colSpan="4" className="text-center py-6 text-gray-400">
+                  Aucun utilisateur trouvé.
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
 
-      <div className="flex justify-end mb-6">
+      <div className="flex justify-end mt-6">
         <button
           onClick={() => router.push('/admin/users/create')}
-          className="bg-[#32A67F] text-white px-4 py-2 rounded hover:bg-[#251B47] transition"
+          className="bg-[#5C3E9E] text-white px-5 py-2 rounded hover:bg-[#7C5FC3] transition"
         >
-          + Créer un utilisateur
+          + Ajouter un utilisateur
         </button>
       </div>
     </div>

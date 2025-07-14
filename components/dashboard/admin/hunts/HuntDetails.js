@@ -4,9 +4,10 @@ export default function HuntDetails({ hunt, onParticipate, isAdmin = false }) {
   const router = useRouter();
 
   return (
-    <div className="p-8 min-h-screen bg-gradient-to-br from-[#6B3FA0] to-[#A14CA0]">
-      <h1 className="text-3xl font-bold mb-6 text-[#FAF7FF]">Détails de la chasse</h1>
-      <div className="bg-white rounded-lg shadow p-6 space-y-4">
+    <div className="p-8 min-h-screen bg-[#1A1A1A] text-white ml-64">
+      <h1 className="text-3xl font-bold mb-6 text-[#F9C449]">🎯 Détails de la chasse</h1>
+
+      <div className="bg-white text-black rounded-lg shadow-lg p-6 space-y-4">
         <p><strong>Titre :</strong> {hunt.title}</p>
         <p><strong>Description :</strong> {hunt.description || 'Aucune description'}</p>
         <p><strong>Lieu :</strong> {hunt.location || 'Non spécifié'}</p>
@@ -17,29 +18,28 @@ export default function HuntDetails({ hunt, onParticipate, isAdmin = false }) {
         <p><strong>Fin :</strong> {hunt.endDate ? new Date(hunt.endDate).toLocaleString() : 'Non défini'}</p>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-8 flex flex-wrap gap-4">
         {isAdmin && (
           <>
             <button
               onClick={() => router.push(`/admin/hunts/${hunt.id}/edit`)}
-              className="bg-[#32A67F] text-white px-4 py-2 rounded hover:bg-[#251B47] transition"
+              className="bg-[#32A67F] hover:bg-[#26795E] text-white px-4 py-2 rounded transition"
             >
-              Modifier la chasse
+              ✏️ Modifier
             </button>
             <button
               onClick={() => router.push('/admin/hunts')}
-              className="ml-4 bg-[#251B47] text-white px-4 py-2 rounded hover:bg-[#3E2C75] transition"
+              className="bg-[#6B3FA0] hover:bg-[#50317C] text-white px-4 py-2 rounded transition"
             >
-              Retour à la liste
+              🔙 Retour à la liste
             </button>
           </>
         )}
-
         <button
           onClick={onParticipate}
-          className="ml-4 bg-[#251B47] text-white px-4 py-2 rounded hover:bg-[#3E2C75] transition"
+          className="bg-[#D24D79] hover:bg-[#A8325C] text-white px-4 py-2 rounded transition"
         >
-          Rejoindre la chasse
+          🚀 Rejoindre la chasse
         </button>
       </div>
     </div>

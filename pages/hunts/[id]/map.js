@@ -44,7 +44,6 @@ function MapClickHandler({ huntId }) {
         alert('🎉 Bravo ! Vous avez trouvé le trésor !');
         winAudio?.play();
 
-        // ✅ Met à jour le statut en COMPLETED
         const token = localStorage.getItem('token');
         if (token) {
           await fetch(`/api/participation/update-status`, {
@@ -71,13 +70,11 @@ export default function TreasureMapPage() {
   const router = useRouter();
   const { id: huntId } = router.query;
 
-  // Bouncing + mise à jour du statut à l'ouverture
   useEffect(() => {
     if (markerRef.current && markerRef.current._leaflet_id) {
       markerRef.current.bounce({ duration: 1000, height: 100, loop: true });
     }
 
-    // ✅ Mettre le statut en IN_PROGRESS quand on arrive sur la map
     const token = localStorage.getItem('token');
     if (token && huntId) {
       fetch(`/api/participation/update-status`, {

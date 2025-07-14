@@ -14,9 +14,7 @@ export default function ReviewListPage({ huntId, newReview }) {
     const token = localStorage.getItem('token');
     try {
       const res = await fetch(`/api/hunts/${huntId}/review`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
 
@@ -24,12 +22,10 @@ export default function ReviewListPage({ huntId, newReview }) {
         setReviews(data);
         setError('');
       } else {
-        console.error('Données inattendues :', data);
         setReviews([]);
         setError('Impossible de charger les commentaires.');
       }
     } catch (err) {
-      console.error('Erreur réseau :', err);
       setError('Erreur réseau lors du chargement des commentaires.');
     }
   };
@@ -69,65 +65,66 @@ export default function ReviewListPage({ huntId, newReview }) {
     }
   };
 
-  const userEmail =
-    typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
+  const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
 
   return (
-    <div className="space-y-4">
-      {error && <p className="text-red-500">{error}</p>}
+    <div className="space-y-4 mt-6">
+      {error && <p className="text-red-400 text-sm">{error}</p>}
 
-      {Array.isArray(reviews) &&
-        reviews.map((review) => (
-          <div key={review.id} className="p-3 bg-gray-100 rounded shadow">
-            {editingId === review.id ? (
-              <>
-                <textarea
-                  value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
-                  className="w-full p-2 border rounded"
-                />
-                <div className="mt-2 space-x-2">
+      {reviews.map((review) => (
+        <div
+          key={review.id}
+          className="bg-[#1F1F1F] text-white p-4 rounded-lg border border-[#3E2C75] shadow"
+        >
+          {editingId === review.id ? (
+            <>
+              <textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="w-full p-3 rounded bg-[#2A2A2A] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5C3E9E]"
+              />
+              <div className="mt-3 flex gap-2">
+                <button
+                  onClick={() => handleUpdate(review.id)}
+                  className="px-4 py-2 bg-[#F9C449] text-black rounded font-semibold hover:bg-[#D4A634] transition"
+                >
+                  Sauvegarder
+                </button>
+                <button
+                  onClick={() => setEditingId(null)}
+                  className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                >
+                  Annuler
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-base">{review.content}</p>
+              <p className="text-sm text-gray-400 mt-1">
+                Par <span className="text-[#F9C449]">{review.user.email}</span> —{' '}
+                {new Date(review.createdAt).toLocaleString()}
+              </p>
+              {review.user.email === userEmail && (
+                <div className="mt-2 flex gap-4">
                   <button
-                    onClick={() => handleUpdate(review.id)}
-                    className="px-3 py-1 bg-green-500 text-white rounded"
+                    onClick={() => handleEdit(review)}
+                    className="text-indigo-400 hover:text-indigo-200 text-sm"
                   >
-                    Sauvegarder
+                    Modifier
                   </button>
                   <button
-                    onClick={() => setEditingId(null)}
-                    className="px-3 py-1 bg-gray-400 text-white rounded"
+                    onClick={() => handleDelete(review.id)}
+                    className="text-red-400 hover:text-red-300 text-sm"
                   >
-                    Annuler
+                    Supprimer
                   </button>
                 </div>
-              </>
-            ) : (
-              <>
-                <p className="text-sm text-gray-700">{review.content}</p>
-                <p className="text-xs text-gray-500">
-                  Par {review.user.email} le{' '}
-                  {new Date(review.createdAt).toLocaleString()}
-                </p>
-                {review.user.email === userEmail && (
-                  <div className="mt-2 space-x-2">
-                    <button
-                      onClick={() => handleEdit(review)}
-                      className="text-blue-500 text-sm"
-                    >
-                      Modifier
-                    </button>
-                    <button
-                      onClick={() => handleDelete(review.id)}
-                      className="text-red-500 text-sm"
-                    >
-                      Supprimer
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        ))}
+              )}
+            </>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

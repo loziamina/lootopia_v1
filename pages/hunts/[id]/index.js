@@ -22,7 +22,7 @@ export default function HuntDetailPage() {
       setHunt(res.data);
     } catch (err) {
       console.error('Erreur :', err);
-      setError('Impossible de charger la chasse.');
+      setError("Impossible de charger la chasse.");
     }
   };
 
@@ -34,12 +34,20 @@ export default function HuntDetailPage() {
       });
       router.push(`/hunts/${id}/map`);
     } catch (err) {
-      setError('Participation échouée.');
+      setError("Participation échouée.");
     }
   };
 
-  if (error) return <p className="p-4 text-red-500">{error}</p>;
-  if (!hunt) return <p className="p-4">Chargement...</p>;
-
-  return <HuntDetails hunt={hunt} onParticipate={handleParticipate} />;
+  return (
+    <div className="min-h-screen bg-[#F8F9FA] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-8">
+        {error && <p className="text-red-600 mb-4 text-center">{error}</p>}
+        {!hunt ? (
+          <p className="text-gray-600 text-center">Chargement...</p>
+        ) : (
+          <HuntDetails hunt={hunt} onParticipate={handleParticipate} />
+        )}
+      </div>
+    </div>
+  );
 }
