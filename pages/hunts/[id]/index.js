@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import HuntDetails from '@/components/dashboard/admin/hunts/HuntDetails';
-import ReviewForm from '@/components/dashboard/admin/reviews/ReviewForm';
-import ReviewListPage from '@/components/dashboard/admin/reviews/ReviewListPage';
 
-export default function AdminHuntDetail() {
+export default function HuntDetailPage() {
   const router = useRouter();
   const { id } = router.query;
   const [hunt, setHunt] = useState(null);
@@ -18,12 +16,13 @@ export default function AdminHuntDetail() {
   const fetchHunt = async () => {
     const token = localStorage.getItem('token');
     try {
-      const res = await axios.get(`/api/admin/hunts/${id}/hunt`, {
+      const res = await axios.get(`/api/users/hunts/${id}/hunt`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setHunt(res.data);
     } catch (err) {
-      setError('Erreur de chargement');
+      console.error('Erreur :', err);
+      setError('Impossible de charger la chasse.');
     }
   };
 
@@ -35,18 +34,12 @@ export default function AdminHuntDetail() {
       });
       router.push(`/hunts/${id}/map`);
     } catch (err) {
-      setError('Erreur lors de la participation.');
+      setError('Participation échouée.');
     }
   };
 
-  if (error) return <p className="text-red-500 p-4">{error}</p>;
+  if (error) return <p className="p-4 text-red-500">{error}</p>;
   if (!hunt) return <p className="p-4">Chargement...</p>;
 
-  return (
-    <>
-      <HuntDetails hunt={hunt} onParticipate={handleParticipate} isAdmin={true} />
-      <ReviewForm huntId={id} />
-      <ReviewListPage huntId={id} />
-    </>
-  );
+  return <HuntDetails hunt={hunt} onParticipate={handleParticipate} />;
 }

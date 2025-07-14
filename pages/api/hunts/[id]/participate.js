@@ -7,12 +7,10 @@ export default async function handler(req, res) {
   const { id } = req.query;
   const authHeader = req.headers.authorization;
 
-  // Vérifie la méthode HTTP
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Méthode non autorisée' });
   }
 
-  // Vérifie le token dans le header Authorization
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Token manquant ou mal formé' });
   }
@@ -30,7 +28,6 @@ export default async function handler(req, res) {
   const userId = decoded.id;
 
   try {
-    // Vérifie si la chasse existe
     const hunt = await prisma.treasureHunt.findUnique({
       where: { id: huntId },
     });
@@ -39,7 +36,6 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: 'Chasse non trouvée' });
     }
 
-    // Vérifie si l'utilisateur participe déjà
     const existingParticipation = await prisma.participation.findFirst({
       where: {
         userId,
@@ -54,7 +50,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Crée une nouvelle participation
     const participation = await prisma.participation.create({
       data: {
         userId,

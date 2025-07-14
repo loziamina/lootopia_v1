@@ -9,7 +9,7 @@ export default function HuntDetailPage() {
   const { id } = router.query;
   const [hunt, setHunt] = useState(null);
   const [error, setError] = useState('');
-  const [newReview, setNewReview] = useState(null); // ✅ Ajout pour rafraîchir les commentaires
+  const [newReview, setNewReview] = useState(null); 
 
   useEffect(() => {
     if (id) fetchHunt();
@@ -45,16 +45,9 @@ export default function HuntDetailPage() {
         <p><strong>Début :</strong> {hunt.startDate ? new Date(hunt.startDate).toLocaleString() : 'Non défini'}</p>
         <p><strong>Fin :</strong> {hunt.endDate ? new Date(hunt.endDate).toLocaleString() : 'Non défini'}</p>
       </div>
-
       <div className="mt-6">
         <button
-          onClick={() => router.push(`/admin/hunts/${id}/edit`)}
-          className="bg-[#32A67F] text-white px-4 py-2 rounded hover:bg-[#251B47] transition"
-        >
-          Modifier la chasse
-        </button>
-        <button
-          onClick={() => router.push('/admin/hunts')}
+          onClick={() => router.push('/user/hunts')}
           className="ml-4 bg-[#251B47] text-white px-4 py-2 rounded hover:bg-[#3E2C75] transition"
         >
           Retour à la liste

@@ -54,15 +54,12 @@ export default function Navbar() {
               <>
                 <Link href="/admin/users" className="hover:text-[#D24D79] transition">Utilisateurs</Link>
                 <Link href="/admin/hunts" className="hover:text-[#32A67F] transition">Chasses</Link>
-                <Link href="/admin/reviews" className="hover:text-[#3E2C75] transition">Avis</Link>
               </>
             )}
 
             {userRole === 'USER' && (
               <>
                 <Link href="/user/hunts" className="hover:text-[#F9C449] transition">Mes Chasses</Link>
-                <Link href="/user/participate" className="hover:text-[#3E2C75] transition">Avis</Link>
-
               </>
             )}
 
@@ -76,7 +73,6 @@ export default function Navbar() {
         )}
       </div>
 
-      {/* Mobile menu button */}
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         className="block md:hidden"
@@ -97,7 +93,6 @@ export default function Navbar() {
         </svg>
       </button>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className="absolute top-16 right-0 bg-[#6B3FA0] text-[#FAF7FF] shadow-md rounded-lg p-4 w-48">
           {!isAuthenticated ? (
@@ -112,11 +107,12 @@ export default function Navbar() {
                 <>
                   <Link href="/admin/users" className="block py-2">Utilisateurs</Link>
                   <Link href="/admin/hunts" className="block py-2">Chasses</Link>
-                  <Link href="/admin/reviews/" className="block py-2">Avis</Link>
                 </>
               )}
               {userRole === 'USER' && (
-                <Link href="users/hunts" className="block py-2">Mes Chasses</Link>
+                  <>
+                <Link href="/user/hunts" className="hover:text-[#F9C449] transition">Mes Chasses</Link>
+              </>
               )}
               <button
                 onClick={handleLogout}

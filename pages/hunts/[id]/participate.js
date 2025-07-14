@@ -38,7 +38,6 @@ export default function HuntDetailPage() {
       });
 
       if (response.status === 200) {
-        // Redirection vers la page de la carte
         router.push(`/hunts/${id}/map`);
       }
     } catch (err) {
