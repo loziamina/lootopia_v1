@@ -50,7 +50,6 @@ export default function Home() {
 
    return (
     <div className="flex flex-col gap-4 text-sm">
-      <h1 className="text-3xl font-bold mb-4">Bienvenue {firstName} 👋</h1>
       <h2 className="text-4xl font-semibold mb-6 text-purple-400">Aventures en cours</h2>
       <JoinCardStatus joinedHunts={joinedHunts} />
     </div>

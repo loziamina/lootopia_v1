@@ -8,7 +8,8 @@ export default function HuntRow({ hunt, onDelete, onEdit, onView }) {
       <td className="py-4 px-4 text-gray-400">
         {hunt.createdAt ? new Date(hunt.createdAt).toLocaleDateString() : '—'}
       </td>
-      <td className="py-4 px-4 flex gap-2 justify-center">
+      <td className="py-4 px-4">
+      <div className="flex gap-2 justify-center">
         <button
           onClick={() => onView(hunt.id)}
           className="px-3 py-1 bg-[#6B3FA0] text-white text-sm rounded hover:bg-[#7E48C2] transition"
@@ -27,7 +28,8 @@ export default function HuntRow({ hunt, onDelete, onEdit, onView }) {
         >
           Supprimer
         </button>
-      </td>
+      </div>
+    </td>
     </tr>
   );
 }
