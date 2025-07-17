@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     return res.status(401).json({ message: 'Token invalide ou expiré' });
   }
 
-  const userId = decoded.id; // 👈 Assure-toi que c'est bien "id" dans ton token
+  const userId = decoded.id; 
   const { huntId, status } = req.body;
 
   if (!huntId || !status) {
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     const participation = await prisma.participation.findFirst({
       where: {
         userId,
-        huntId: parseInt(huntId, 10), // ✅ conversion ici
+        huntId: parseInt(huntId, 10), 
       },
     });
 

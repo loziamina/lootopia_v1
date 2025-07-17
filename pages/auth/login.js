@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from '../../components/contexts/AuthContext'; // Contexte global
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -10,20 +10,19 @@ export default function Login() {
   const [error, setError] = useState('');
   const router = useRouter();
 
+  const { login } = useContext(AuthContext); // Fonction login du contexte
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/auth/login', { email, password });
       const { token } = response.data;
 
-      localStorage.setItem('token', token);
-      const decoded = jwtDecode(token);
-      localStorage.setItem('userEmail', decoded.email);
-
-      router.push('/');
+      login(token); // ⬅️ Met à jour le contexte + localStorage + role
+      router.push('/'); // Redirige après login
     } catch (err) {
       setError('❌ Email ou mot de passe incorrect.');
-      console.log('Login error:', err);
+      console.log('Erreur de connexion :', err);
     }
   };
 
@@ -42,7 +41,7 @@ export default function Login() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F]"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
               required
             />
           </div>
@@ -54,7 +53,7 @@ export default function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F]"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
               required
             />
           </div>

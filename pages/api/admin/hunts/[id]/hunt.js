@@ -55,15 +55,27 @@ export default async function handler(req, res) {
       return res.status(500).json({ message: 'Erreur serveur' });
     }
   }
-
-  if (req.method === 'DELETE') {
-    try {
-      await prisma.treasureHunt.delete({ where: { id: parseInt(id) } });
-      return res.status(200).json({ message: 'Chasse supprimée' });
-    } catch (error) {
-      return res.status(500).json({ message: 'Erreur serveur' });
+if (req.method === 'DELETE') {
+  try {
+    //ajout
+    const huntId = parseInt(id);
+    const existingHunt = await prisma.treasureHunt.findUnique({ where: { id: huntId } });
+    if (!existingHunt) {
+      return res.status(404).json({ message: 'Chasse non trouvée' });
     }
+     // Supprimer les reviews et participations d'abord si pas de cascade configurée
+    await prisma.review.deleteMany({ where: { huntId } });
+    await prisma.participation.deleteMany({ where: { huntId } });
+
+
+    await prisma.treasureHunt.delete({ where: { id: huntId } });
+    return res.status(200).json({ message: 'Chasse supprimée' });
+  } catch (error) {
+    console.error('❌ Erreur serveur DELETE :', error);  // 👈 Ajoute ceci
+    return res.status(500).json({ message: 'Erreur serveur' });
   }
+}
+
 
   return res.status(405).json({ message: 'Méthode non autorisée' });
 }

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { AuthContext } from '../../components/contexts/AuthContext'; // ⬅️ Contexte global
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -10,8 +11,9 @@ export default function Signup() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const router = useRouter();
+
+  const { login } = useContext(AuthContext); // ⬅️ Récupère la fonction login()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,15 +32,13 @@ export default function Signup() {
       const response = await axios.post('/api/auth/signup', {
         email, password, firstName, lastName,
       });
-      setSuccess("Inscription réussie. Redirection vers la connexion...");
-      setError('');
 
-      setTimeout(() => {
-        router.push('/auth/login');
-      }, 2000);
+      const { token } = response.data;
+
+      login(token); // ⬅️ Connecte automatiquement l'utilisateur
+      router.push('/'); // Redirection après inscription réussie
     } catch (err) {
       setError("Erreur lors de l'inscription. Vérifiez vos informations.");
-      setSuccess('');
       console.error("Signup error:", err);
     }
   };
@@ -49,7 +49,6 @@ export default function Signup() {
         <h2 className="text-3xl font-bold mb-4 text-center text-[#251B47]">Créer un compte</h2>
 
         {error && <div className="text-red-500 mb-4 text-sm">{error}</div>}
-        {success && <div className="text-green-600 mb-4 text-sm">{success}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
