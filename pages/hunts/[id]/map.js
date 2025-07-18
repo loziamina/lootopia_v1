@@ -4,16 +4,16 @@ import { useRouter } from 'next/router';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.smooth_marker_bouncing';
 
-// Charger les composants de react-leaflet dynamiquement pour éviter les erreurs SSR
+
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
-import { useMapEvents } from 'react-leaflet'; // Import statique pour useMapEvents
+import { useMapEvents } from 'react-leaflet'; 
 
-// Fonction pour générer des coordonnées aléatoires pour déplacer le trésor
+
 const generateRandomCoords = () => {
-  const lat = 48.8566 + (Math.random() - 0.5) * 0.1; // Déplacement autour de Paris
-  const lng = 2.3522 + (Math.random() - 0.5) * 0.1; // Déplacement autour de Paris
+  const lat = 48.8566 + (Math.random() - 0.5) * 0.1; 
+  const lng = 2.3522 + (Math.random() - 0.5) * 0.1; 
   return { lat, lng };
 };
 
@@ -40,7 +40,7 @@ function MapClickHandler({ huntId, treasureCoords, setTreasureCoords }) {
   const winAudio = typeof Audio !== 'undefined' ? new Audio('/win.mp3') : null;
   const failAudio = typeof Audio !== 'undefined' ? new Audio('/fail.mp3') : null;
 
-  // Utilisation de useMapEvents à l'intérieur du MapContainer
+
   useMapEvents({
     click: async (e) => {
       const { lat, lng } = e.latlng;
@@ -49,18 +49,18 @@ function MapClickHandler({ huntId, treasureCoords, setTreasureCoords }) {
       console.log(`Distance du trésor: ${distance} km`);
 
       if (distance < 0.05) {
-        // Si le trésor est trouvé
+        
         alert('🎉 Bravo ! Vous avez trouvé le trésor !');
 
         try {
-          await winAudio?.play(); // Lecture du son de victoire
+          await winAudio?.play(); 
         } catch (err) {
           console.warn('🔇 Autoplay bloqué pour win.mp3 :', err);
         }
 
-        // Déplacer le trésor
+      
         const newCoords = generateRandomCoords();
-        setTreasureCoords(newCoords); // Mise à jour des coordonnées du trésor
+        setTreasureCoords(newCoords); 
 
         const token = localStorage.getItem('token');
         if (token) {
@@ -74,10 +74,10 @@ function MapClickHandler({ huntId, treasureCoords, setTreasureCoords }) {
           });
         }
       } else {
-        // Si le trésor n'est pas trouvé
+       
         alert(`❌ Vous êtes à ${distance} km du trésor. Essayez encore !`);
         try {
-          await failAudio?.play(); // Lecture du son d'échec
+          await failAudio?.play(); 
         } catch (err) {
           console.warn('🔇 Autoplay bloqué pour fail.mp3 :', err);
         }
@@ -92,7 +92,7 @@ export default function TreasureMapPage() {
   const markerRef = useRef(null);
   const router = useRouter();
   const { id: huntId } = router.query;
-  const [treasureCoords, setTreasureCoords] = useState({ lat: 48.8966, lng: 2.2375 }); // État pour les coordonnées du trésor
+  const [treasureCoords, setTreasureCoords] = useState({ lat: 48.8966, lng: 2.2375 }); 
 
   useEffect(() => {
     if (markerRef.current && markerRef.current._leaflet_id) {
@@ -112,9 +112,8 @@ export default function TreasureMapPage() {
     }
   }, [huntId]);
 
-  // Définir la fonction handleQuit à l'intérieur du composant
   const handleQuit = () => {
-    router.push('/'); // Rediriger vers la page d'accueil (ou une autre page)
+    router.push('/'); 
   };
 
   return (

@@ -11,28 +11,48 @@ export default function HuntDetailPage() {
   const [error, setError] = useState('');
   const [newReview, setNewReview] = useState(null);
 
-
   useEffect(() => {
     if (id) fetchHunt();
   }, [id]);
 
   const fetchHunt = async () => {
     const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Vous devez être connecté.');
+      return;
+    }
+
     try {
+      // 1. Essayer la route utilisateur
       const response = await axios.get(`/api/users/hunts/${id}/hunt`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setHunt(response.data);
     } catch (err) {
-      console.error('Erreur lors du chargement de la chasse :', err);
-      setError('Impossible de charger les détails de la chasse.');
+      // 2. Si erreur 403, tenter la route admin
+      if (err.response && err.response.status === 403) {
+        try {
+          const adminResponse = await axios.get(`/api/admin/hunts/${id}/hunt`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setHunt(adminResponse.data);
+        } catch (adminErr) {
+          console.error('Erreur admin lors du chargement de la chasse :', adminErr);
+          setError('Impossible de charger les détails de la chasse.');
+        }
+      } else {
+        console.error('Erreur lors du chargement de la chasse :', err);
+        setError('Impossible de charger les détails de la chasse.');
+      }
     }
   };
 
   const handleParticipate = async () => {
     const token = localStorage.getItem('token');
-    if (!token) {
-      setError('Vous devez être connecté pour participer.');
+    const role = localStorage.getItem('role');
+
+    if (!token || role === 'ADMIN') {
+      setError("Seuls les utilisateurs peuvent participer aux chasses.");
       return;
     }
 
@@ -73,19 +93,22 @@ export default function HuntDetailPage() {
         <p className="text-gray-300"><strong className="text-white">Fin :</strong> {hunt.endDate ? new Date(hunt.endDate).toLocaleString() : 'Non défini'}</p>
       </div>
 
-      <div className="mt-6">
-        <button
-          onClick={handleParticipate}
-          className="text-white px-4 py-2 rounded transition"
-          style={{
-            backgroundColor: '#5C3E9E',
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#432B7D')}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5C3E9E')}
-        >
-          Participer à cette chasse
-        </button>
-      </div>
+      {localStorage.getItem('role') !== 'ADMIN' && (
+        <div className="mt-6">
+          <button
+            onClick={handleParticipate}
+            className="text-white px-4 py-2 rounded transition"
+            style={{
+              backgroundColor: '#5C3E9E',
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#432B7D')}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5C3E9E')}
+          >
+            Participer à cette chasse
+          </button>
+        </div>
+      )}
+
       <ReviewForm huntId={id} onReviewAdded={setNewReview} />
       <ReviewListPage huntId={id} newReview={newReview} />
     </div>

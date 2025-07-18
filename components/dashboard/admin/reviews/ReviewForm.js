@@ -26,7 +26,6 @@ export default function ReviewForm({ huntId, onReviewAdded = () => {} }) {
         setContent('');
         const newReview = await res.json();
 
-        // ✅ Vérifie que onReviewAdded est bien une fonction avant de l'appeler
         if (typeof onReviewAdded === 'function') {
           onReviewAdded(newReview);
         }

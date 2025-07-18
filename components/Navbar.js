@@ -48,7 +48,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen text-white">
+    <div className="flex flex-col h-full text-white">
       {/* Haut */}
       <div>
         <div className="flex justify-center mb-2">

@@ -56,7 +56,7 @@ export default function Signup() {
             placeholder="Prénom"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            className="block text-sm font-medium text-gray-700"
             required
           />
           <input
@@ -64,7 +64,7 @@ export default function Signup() {
             placeholder="Nom"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            className="block text-sm font-medium text-gray-700"
             required
           />
           <input
@@ -72,7 +72,7 @@ export default function Signup() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            className="block text-sm font-medium text-gray-700"
             required
           />
           <input
@@ -80,7 +80,7 @@ export default function Signup() {
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            className="block text-sm font-medium text-gray-700"
             required
           />
           <input
@@ -88,7 +88,7 @@ export default function Signup() {
             placeholder="Confirmer le mot de passe"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full border p-2 rounded-md border-gray-300 focus:ring-[#32A67F] focus:border-[#32A67F]"
+            className="block text-sm font-medium text-gray-700"
             required
           />
 

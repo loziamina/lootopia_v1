@@ -5,7 +5,38 @@ export default function ReviewListPage({ huntId, newReview }) {
   const [editingId, setEditingId] = useState(null);
   const [editedContent, setEditedContent] = useState('');
   const [error, setError] = useState('');
+  const [userEmail, setUserEmail] = useState(null);
 
+  // Fonction pour décoder un JWT sans lib externe
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      console.error('Erreur de décodage du token JWT', e);
+      return null;
+    }
+  }
+
+  // Décodage du token pour récupérer l'e-mail utilisateur
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = parseJwt(token);
+      if (decoded?.email) {
+        setUserEmail(decoded.email.toLowerCase());
+      }
+    }
+  }, []);
+
+  // Chargement des avis
   useEffect(() => {
     fetchReviews();
   }, [huntId, newReview]);
@@ -16,17 +47,17 @@ export default function ReviewListPage({ huntId, newReview }) {
       const res = await fetch(`/api/hunts/${huntId}/review`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const data = await res.json();
 
+      const data = await res.json();
       if (Array.isArray(data)) {
         setReviews(data);
         setError('');
       } else {
         setReviews([]);
-        setError('Impossible de charger les commentaires.');
+        setError("Impossible de charger les commentaires.");
       }
     } catch (err) {
-      setError('Erreur réseau lors du chargement des commentaires.');
+      setError("Erreur réseau lors du chargement des commentaires.");
     }
   };
 
@@ -65,66 +96,74 @@ export default function ReviewListPage({ huntId, newReview }) {
     }
   };
 
-  const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
-
   return (
     <div className="space-y-4 mt-6">
       {error && <p className="text-red-400 text-sm">{error}</p>}
 
-      {reviews.map((review) => (
-        <div
-          key={review.id}
-          className="bg-[#1F1F1F] text-white p-4 rounded-lg border border-[#3E2C75] shadow"
-        >
-          {editingId === review.id ? (
-            <>
-              <textarea
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-                className="w-full p-3 rounded bg-[#2A2A2A] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5C3E9E]"
-              />
-              <div className="mt-3 flex gap-2">
-                <button
-                  onClick={() => handleUpdate(review.id)}
-                  className="px-4 py-2 bg-[#F9C449] text-black rounded font-semibold hover:bg-[#D4A634] transition"
-                >
-                  Sauvegarder
-                </button>
-                <button
-                  onClick={() => setEditingId(null)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-                >
-                  Annuler
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="text-base">{review.content}</p>
-              <p className="text-sm text-gray-400 mt-1">
-                Par <span className="text-[#F9C449]">{review.user.email}</span> —{' '}
-                {new Date(review.createdAt).toLocaleString()}
-              </p>
-              {review.user.email === userEmail && (
-                <div className="mt-2 flex gap-4">
+      {reviews.map((review) => {
+        const authorEmail = review.user?.email?.toLowerCase();
+        const canEdit = authorEmail === userEmail;
+
+        console.log('User email:', userEmail);
+        console.log('Review email:', authorEmail);
+        console.log('Can edit?', canEdit);
+
+        return (
+          <div
+            key={review.id}
+            className="bg-[#1F1F1F] text-white p-4 rounded-lg border border-[#3E2C75] shadow"
+          >
+            {editingId === review.id ? (
+              <>
+                <textarea
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                  className="w-full p-3 rounded bg-[#2A2A2A] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5C3E9E]"
+                />
+                <div className="mt-3 flex gap-2">
                   <button
-                    onClick={() => handleEdit(review)}
-                    className="text-indigo-400 hover:text-indigo-200 text-sm"
+                    onClick={() => handleUpdate(review.id)}
+                    className="px-4 py-2 bg-[#F9C449] text-black rounded font-semibold hover:bg-[#D4A634] transition"
                   >
-                    Modifier
+                    Sauvegarder
                   </button>
                   <button
-                    onClick={() => handleDelete(review.id)}
-                    className="text-red-400 hover:text-red-300 text-sm"
+                    onClick={() => setEditingId(null)}
+                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
                   >
-                    Supprimer
+                    Annuler
                   </button>
                 </div>
-              )}
-            </>
-          )}
-        </div>
-      ))}
+              </>
+            ) : (
+              <>
+                <p className="text-base">{review.content}</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Par <span className="text-[#F9C449]">{review.user?.email}</span> —{' '}
+                  {new Date(review.createdAt).toLocaleString()}
+                </p>
+
+                {canEdit && (
+                  <div className="mt-2 flex gap-4">
+                    <button
+                      onClick={() => handleEdit(review)}
+                      className="text-indigo-400 hover:text-indigo-200 text-sm"
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => handleDelete(review.id)}
+                      className="text-red-400 hover:text-red-300 text-sm"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
