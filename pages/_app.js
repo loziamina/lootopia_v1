@@ -1,22 +1,15 @@
-// pages/_app.js
-import { useEffect, useState } from 'react';
+import { AuthProvider } from '../components/contexts/AuthContext'; // <--- ajoute ceci
 import '../styles/globals.css';
-import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
+import 'leaflet/dist/leaflet.css';
 
 function MyApp({ Component, pageProps }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    // Vérifiez la présence du token dans localStorage lors du premier chargement
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(token !== null);
-  }, []);
-
   return (
-    <div>
-      <Navbar isAuthenticated={isAuthenticated} />
-      <Component {...pageProps} />
-    </div>
+    <AuthProvider> {/* Fournit le contexte à toute l'app */}
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </AuthProvider>
   );
 }
 

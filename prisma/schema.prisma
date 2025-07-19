@@ -12,6 +12,7 @@ model User {
   id               Int            @id @default(autoincrement())
   email            String         @unique
   password         String
+  address          String?
   firstName        String?
   lastName         String?
   resetToken       String?
@@ -19,7 +20,22 @@ model User {
   role             Role           @default(USER)
 
   createdHunts     TreasureHunt[] @relation("CreatedByUser")
+  reviews  Review[]               @relation(onDelete: Cascade)
+  participations   Participation[] @relation(onDelete: Cascade)
 }
+model Participation {
+  id       Int           @id @default(autoincrement())
+  user     User          @relation(fields: [userId], references: [id])
+  userId   Int
+  hunt     TreasureHunt  @relation(fields: [huntId], references: [id])
+  huntId   Int
+  status     HuntStatus    @default(PENDING)
+
+  createdAt DateTime     @default(now())
+
+  @@unique([userId, huntId]) // un utilisateur ne peut participer qu'une fois à une chasse
+}
+
 
 model TreasureHunt {
   id          Int      @id @default(autoincrement())
@@ -38,7 +54,23 @@ model TreasureHunt {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   imageUrl    String?   
+  reviews     Review[]  
+  participations Participation[]
 }
+
+model Review {
+  id        Int           @id @default(autoincrement())
+  content   String
+  createdAt DateTime      @default(now())
+
+  user      User          @relation(fields: [userId], references: [id])
+  userId    Int
+
+  hunt      TreasureHunt  @relation(fields: [huntId], references: [id])
+  huntId    Int
+}
+
+
 
 enum Role {
   USER

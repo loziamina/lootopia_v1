@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from '../../components/contexts/AuthContext'; 
+import { jwtDecode } from "jwt-decode"; 
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -10,60 +12,74 @@ export default function Login() {
   const [error, setError] = useState('');
   const router = useRouter();
 
+  const { login } = useContext(AuthContext); 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/auth/login', { email, password });
       const { token } = response.data;
-
-      localStorage.setItem('token', token);
-
       const decoded = jwtDecode(token);
+      console.log("token décodé", decoded); 
+      localStorage.setItem("userEmail", decoded.email);
 
+
+      login(token);
       router.push('/');
     } catch (err) {
-      setError('Email ou mot de passe incorrect.');
-      console.log('Login error:', err);
+      setError('❌ Email ou mot de passe incorrect.');
+      console.log('Erreur de connexion :', err);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-4">Connexion</h2>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mot de passe</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">Se connecter</button>
-        </form>
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#1B1B1F] to-[#2A2A2E] flex justify-center items-center">
+        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-center text-[#251B47]">Connexion</h2>
 
-        <div className="mt-4 text-center">
-          <Link href="/auth/forgot-password">
-            <span className="text-sm text-blue-600 hover:underline">Mot de passe oublié ?</span>
-          </Link>
+          {error && <div className="text-red-500 mb-4 text-sm">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mot de passe</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-[#32A67F] text-white rounded-md hover:bg-[#251B47] transition"
+            >
+              Se connecter
+            </button>
+          </form>
+
+          <div className="mt-4 text-center">
+            <Link href="/auth/forgot-password" passHref>
+              <span className="text-sm text-[#32A67F] hover:underline cursor-pointer">
+                Mot de passe oublié ?
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }

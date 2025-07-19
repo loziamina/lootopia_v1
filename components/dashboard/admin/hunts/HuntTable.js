@@ -3,9 +3,9 @@ import HuntRow from './HuntRow';
 
 export default function HuntTable({ hunts, onDelete, onEdit, onView }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white shadow-md rounded-lg">
-        <thead className="bg-gray-100 text-gray-700">
+    <div className="overflow-x-auto rounded-lg shadow-lg">
+      <table className="min-w-full bg-[#1A1A1A] text-white">
+        <thead className="bg-[#2A2A2A] text-[#F9C449]">
           <tr>
             <th className="py-3 px-4 text-left">Titre</th>
             <th className="py-3 px-4 text-left">Organisateur</th>
@@ -25,7 +25,7 @@ export default function HuntTable({ hunts, onDelete, onEdit, onView }) {
           ))}
           {hunts.length === 0 && (
             <tr>
-              <td colSpan="4" className="text-center py-4 text-gray-500">
+              <td colSpan="4" className="text-center py-4 text-gray-400">
                 Aucune chasse trouvée.
               </td>
             </tr>

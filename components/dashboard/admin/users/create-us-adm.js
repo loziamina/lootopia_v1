@@ -35,20 +35,70 @@ export default function CreateUserAdminForm() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Créer un utilisateur ou admin</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="max-w-xl mx-auto p-8 bg-[#1F1F1F] text-white rounded-lg shadow-lg mt-10 border border-[#3E2C75]">
+      <h2 className="text-3xl font-bold mb-6 text-[#F9C449] text-center">
+        Créer un utilisateur
+      </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="firstName" placeholder="Prénom" value={form.firstName} onChange={handleChange} className="w-full border p-2 rounded" required />
-        <input name="lastName" placeholder="Nom" value={form.lastName} onChange={handleChange} className="w-full border p-2 rounded" required />
-        <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} className="w-full border p-2 rounded" required />
-        <input name="password" type="password" placeholder="Mot de passe" value={form.password} onChange={handleChange} className="w-full border p-2 rounded" required />
-        <select name="role" value={form.role} onChange={handleChange} className="w-full border p-2 rounded">
+      {error && (
+        <p className="text-red-400 mb-4 text-center font-semibold">{error}</p>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <input
+          name="firstName"
+          placeholder="Prénom"
+          value={form.firstName}
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-[#2A2A2A] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5C3E9E]"
+          required
+        />
+
+        <input
+          name="lastName"
+          placeholder="Nom"
+          value={form.lastName}
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-[#2A2A2A] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5C3E9E]"
+          required
+        />
+
+        <input
+          name="email"
+          type="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-[#2A2A2A] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5C3E9E]"
+          required
+        />
+
+        <input
+          name="password"
+          type="password"
+          placeholder="Mot de passe"
+          value={form.password}
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-[#2A2A2A] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5C3E9E]"
+          required
+        />
+
+        <select
+          name="role"
+          value={form.role}
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-[#2A2A2A] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5C3E9E]"
+        >
           <option value="USER">Utilisateur</option>
           <option value="ADMIN">Admin</option>
         </select>
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Créer</button>
+
+        <button
+          type="submit"
+          className="w-full py-3 bg-[#F9C449] text-black font-semibold rounded hover:bg-[#D4A634] transition"
+        >
+          Créer l'utilisateur
+        </button>
       </form>
     </div>
   );

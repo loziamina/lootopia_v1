@@ -42,21 +42,25 @@ export default function HuntListPage() {
   };
 
   const viewHunt = (id) => {
-    console.log('Voir détails chasse ID :', id);
+    window.location.href = `/admin/hunts/${id}`; 
   };
 
   const editHunt = (id) => {
-    console.log('Modifier chasse ID :', id);
+    window.location.href = `/admin/hunts/${id}/edit`; 
   };
 
   const filteredHunts = hunts.filter((hunt) =>
-    hunt.name.toLowerCase().includes(search.toLowerCase())
+    hunt.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="p-8 min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Liste des chasses</h1>
+    <div className="p-8 min-h-screen bg-[#1A1A1A] text-white ml-64">
+      <h1 className="text-3xl font-bold mb-6 text-[#F9C449] text-center">
+        📜 Liste des Chasses
+      </h1>
+
       <HuntSearch search={search} setSearch={setSearch} />
+
       <HuntTable
         hunts={filteredHunts}
         onDelete={deleteHunt}

@@ -1,131 +1,105 @@
-import { useState, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from './contexts/AuthContext';
+import { FaStar, FaArrowLeft } from 'react-icons/fa';
+import Image from 'next/image';
+import logo from '../public/images/logo-lootopia.png';
 
 export default function Navbar() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-      try {
-        const decoded = jwtDecode(token);
-        setUserRole(decoded.role);
-      } catch (err) {
-        console.error("Erreur de décodage du JWT :", err);
-        localStorage.removeItem('token');
-      }
-    }
-  }, []);
+  const { isAuthenticated, userRole, logout } = useContext(AuthContext);
+  const [firstName, setFirstName] = useState('');
+  const [joinedHunts, setJoinedHunts] = useState([]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.dispatchEvent(new Event("storage"));
-    setIsAuthenticated(false);
-    setUserRole(null);
+    logout();
     router.push('/auth/login');
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const userRes = await fetch('/api/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!userRes.ok) throw new Error('Unauthorized');
+        const userData = await userRes.json();
+        setFirstName(userData.firstName || 'utilisateur');
+
+        const huntsRes = await fetch('/api/users/hunts', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const huntsData = await huntsRes.json();
+        setJoinedHunts(Array.isArray(huntsData) ? huntsData : []);
+      } catch (error) {
+        console.error('Erreur Navbar:', error);
+        localStorage.removeItem('token');
+        router.push('/auth/login');
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <nav className="bg-[#6B3FA0] px-6 py-4 flex justify-between items-center text-[#FAF7FF] shadow-md">
-      <h1
-        className="text-3xl font-bold cursor-pointer hover:text-[#F9C449] transition"
-        onClick={() => router.push('/')}
-      >
-        Lootopia
-      </h1>
+    <div className="flex flex-col h-full text-white">
+      {/* Haut */}
+      <div>
+        <div className="flex justify-center mb-2">
+          <Image src={logo} alt="Lootopia Logo" width={80} height={80} className="rounded-full" />
+        </div>
 
-      <div className="space-x-4 text-sm font-medium hidden md:flex">
-        {!isAuthenticated ? (
-          <>
-            <Link href="/auth/login" className="hover:text-[#D24D79] transition">Connexion</Link>
-            <Link href="/auth/signup" className="hover:text-[#32A67F] transition">Inscription</Link>
-          </>
-        ) : (
-          <>
-            <Link href="/profile" className="hover:text-[#F9C449] transition">Mon Profil</Link>
-
-            {userRole === 'ADMIN' && (
-              <>
-                <Link href="/admin/users" className="hover:text-[#D24D79] transition">Utilisateurs</Link>
-                <Link href="/admin/hunts" className="hover:text-[#32A67F] transition">Chasses</Link>
-                <Link href="/admin/reviews" className="hover:text-[#3E2C75] transition">Avis</Link>
-              </>
-            )}
-
-            {userRole === 'USER' && (
-              <>
-                <Link href="users/hunts" className="hover:text-[#F9C449] transition">Mes Chasses</Link>
-              </>
-            )}
-
-            <button
-              onClick={handleLogout}
-              className="hover:text-red-300 transition"
-            >
-              Déconnexion
-            </button>
-          </>
+        {isAuthenticated && (
+          <h2 className="text-center text-lg font-bold mb-6">
+            Bienvenue {firstName.charAt(0).toUpperCase() + firstName.slice(1)}
+          </h2>
         )}
-      </div>
 
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setMenuOpen(!menuOpen)}
-        className="block md:hidden"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </button>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="absolute top-16 right-0 bg-[#6B3FA0] text-[#FAF7FF] shadow-md rounded-lg p-4 w-48">
+        <nav className="space-y-3 font-semibold text-sm">
           {!isAuthenticated ? (
             <>
-              <Link href="/auth/login" className="block py-2">Connexion</Link>
-              <Link href="/auth/signup" className="block py-2">Inscription</Link>
+              <Link href="/auth/login" className="block hover:text-[#D24D79]">Connexion</Link>
+              <Link href="/auth/signup" className="block hover:text-[#32A67F]">Inscription</Link>
             </>
           ) : (
             <>
-              <Link href="/profile" className="block py-2">Mon Profil</Link>
+              <Link href="/" className="block hover:text-[#F9C449]">Accueil</Link>
               {userRole === 'ADMIN' && (
                 <>
-                  <Link href="/admin/users" className="block py-2">Utilisateurs</Link>
-                  <Link href="/admin/hunts" className="block py-2">Chasses</Link>
-                  <Link href="/admin/reviews/" className="block py-2">Avis</Link>
+                  <Link href="/admin/users" className="block hover:text-[#D24D79]">Utilisateurs</Link>
+                  <Link href="/admin/hunts" className="block hover:text-[#32A67F]">Chasses</Link>
                 </>
               )}
               {userRole === 'USER' && (
-                <Link href="users/hunts" className="block py-2">Mes Chasses</Link>
+                <>
+                  <Link href="/user/hunts" className="block hover:text-[#F9C449]">Mes chasses</Link>
+                </>
               )}
-              <button
-                onClick={handleLogout}
-                className="block py-2"
-              >
-                Déconnexion
-              </button>
+              <Link href="/profile" className="block hover:text-[#F9C449]">Mon profil</Link>
             </>
           )}
+        </nav>
+      </div>
+
+      {/* Bas */}
+      {isAuthenticated && (
+        <div className="mt-auto space-y-4">
+         
+          {/* Déconnexion */}
+          <button
+            onClick={handleLogout}
+            className="w-full bg-red-700 text-white py-2 px-4 rounded-md hover:bg-red-600 transition"
+          >
+            Déconnexion
+          </button>
         </div>
       )}
-    </nav>
+    </div>
   );
 }
