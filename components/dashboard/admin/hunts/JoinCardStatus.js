@@ -53,7 +53,7 @@ export default function JoinCardStatus({ joinedHunts }) {
                       console.error('Erreur mise à jour statut PENDING :', err);
                     }
                   }
-                  router.push(`/hunts/${hunt.id}/participate`);
+                  router.push(`admin/hunts/${hunt.id}/`);
                 }}
                 className="mt-4 bg-[#5C3E9E] hover:bg-[#432B7D] text-white px-4 py-2 rounded transition duration-200"
               >

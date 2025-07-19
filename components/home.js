@@ -25,8 +25,9 @@ export default function Home() {
         setFirstName(data.firstName);
         const userRole = data.role;
 
-        if (userRole !== 'ADMIN') {
-          fetch('/api/users/hunts', {
+        // ADMIN → nouvelle route API
+        if (userRole === 'ADMIN') {
+          fetch('/api/admin/hunts/with-status', {
             headers: { Authorization: `Bearer ${token}` },
           })
             .then((res) => {
@@ -40,7 +41,20 @@ export default function Home() {
               setJoinedHunts([]);
             });
         } else {
-          setJoinedHunts([]);
+          // USER → comportement inchangé
+          fetch('/api/users/hunts', {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error('Erreur serveur');
+              return res.json();
+            })
+            .then((data) => {
+              setJoinedHunts(Array.isArray(data) ? data : []);
+            })
+            .catch(() => {
+              setJoinedHunts([]);
+            });
         }
       })
       .catch(() => {

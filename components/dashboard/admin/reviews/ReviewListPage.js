@@ -147,7 +147,7 @@ export default function ReviewListPage({ huntId, newReview }) {
                 </p>
 
                 {(canEdit || canDelete) && (
-                                  <div className="mt-2 flex gap-4">
+              <div className="mt-2 flex gap-4">
                   {authorEmail === userEmail && (
                     <button
                       onClick={() => handleEdit(review)}
