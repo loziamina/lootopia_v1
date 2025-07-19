@@ -14,8 +14,6 @@ export default function Home() {
       return;
     }
 
-    let userRole = null;
-
     fetch('/api/me', {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -25,10 +23,10 @@ export default function Home() {
       })
       .then((data) => {
         setFirstName(data.firstName);
-        userRole = data.role;
+        const userRole = data.role;
 
-        if (userRole !== 'admin') {
-          fetch('/api/admin/hunts/hunts', {
+        if (userRole !== 'ADMIN') {
+          fetch('/api/users/hunts', {
             headers: { Authorization: `Bearer ${token}` },
           })
             .then((res) => {
@@ -36,11 +34,7 @@ export default function Home() {
               return res.json();
             })
             .then((data) => {
-              if (Array.isArray(data)) {
-                setJoinedHunts(data);
-              } else {
-                setJoinedHunts([]);
-              }
+              setJoinedHunts(Array.isArray(data) ? data : []);
             })
             .catch(() => {
               setJoinedHunts([]);
