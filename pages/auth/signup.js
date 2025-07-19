@@ -35,7 +35,7 @@ export default function Signup() {
 
       const { token } = response.data;
       login(token);
-      router.push('/');
+      router.push('/auth/login');
     } catch (err) {
       setError("Erreur lors de l'inscription. Vérifiez vos informations.");
       console.error("Signup error:", err);
