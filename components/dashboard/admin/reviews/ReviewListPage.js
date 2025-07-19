@@ -6,8 +6,8 @@ export default function ReviewListPage({ huntId, newReview }) {
   const [editedContent, setEditedContent] = useState('');
   const [error, setError] = useState('');
   const [userEmail, setUserEmail] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
-  // Fonction pour décoder un JWT sans lib externe
   function parseJwt(token) {
     try {
       const base64Url = token.split('.')[1];
@@ -25,18 +25,16 @@ export default function ReviewListPage({ huntId, newReview }) {
     }
   }
 
-  // Décodage du token pour récupérer l'e-mail utilisateur
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const decoded = parseJwt(token);
-      if (decoded?.email) {
-        setUserEmail(decoded.email.toLowerCase());
-      }
+      console.log('Token décodé :', decoded);
+      if (decoded?.email) setUserEmail(decoded.email.toLowerCase());
+      if (decoded?.role) setUserRole(decoded.role.toLowerCase());
     }
   }, []);
 
-  // Chargement des avis
   useEffect(() => {
     fetchReviews();
   }, [huntId, newReview]);
@@ -102,11 +100,11 @@ export default function ReviewListPage({ huntId, newReview }) {
 
       {reviews.map((review) => {
         const authorEmail = review.user?.email?.toLowerCase();
-        const canEdit = authorEmail === userEmail;
+        const isOwner = authorEmail === userEmail;
+        const isAdmin = userRole === 'admin';
 
-        console.log('User email:', userEmail);
-        console.log('Review email:', authorEmail);
-        console.log('Can edit?', canEdit);
+        const canEdit = isOwner;
+        const canDelete = isOwner || isAdmin;
 
         return (
           <div
@@ -143,25 +141,34 @@ export default function ReviewListPage({ huntId, newReview }) {
                   {new Date(review.createdAt).toLocaleString()}
                 </p>
 
-                {canEdit && (
-                  <div className="mt-2 flex gap-4">
+                {/* Debug visible */}
+                <p className="text-xs text-gray-500 mt-1">
+                  [connecté : {userEmail} | rôle : {userRole} | auteur : {authorEmail}]
+                </p>
+
+                {(canEdit || canDelete) && (
+                                  <div className="mt-2 flex gap-4">
+                  {authorEmail === userEmail && (
                     <button
                       onClick={() => handleEdit(review)}
                       className="text-indigo-400 hover:text-indigo-200 text-sm"
                     >
                       Modifier
                     </button>
+                  )}
+                  {(authorEmail === userEmail || userRole?.toLowerCase() === 'admin') && (
                     <button
                       onClick={() => handleDelete(review.id)}
                       className="text-red-400 hover:text-red-300 text-sm"
                     >
                       Supprimer
                     </button>
-                  </div>
+                  )}
+                </div>
                 )}
               </>
             )}
-          </div>
+          </div>  
         );
       })}
     </div>

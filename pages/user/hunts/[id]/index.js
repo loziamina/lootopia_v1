@@ -65,12 +65,15 @@ export default function HuntDetailPage() {
           Rejoindre la chasse
         </button>
       </div>
+      <div className="bg-[#2A2A2E] border border-[#32A67F] rounded-lg p-6 shadow-lg">
+          <h2 className="text-2xl font-semibold text-[#32A67F] mb-4">💬 Ajouter un avis</h2>
+          <ReviewForm huntId={id} onReviewAdded={() => fetchHunt()} />
+        </div>
 
-      <div className="mt-10 rounded-lg shadow p-6" style={{ backgroundColor: '#2A2A2A', border: '1px solid #3E2C75' }}>
-        <h2 className="text-xl font-bold mb-4" style={{ color: '#F9C449' }}>Commentaires</h2>
-        <ReviewForm huntId={id} onReviewAdded={setNewReview} />
-        <ReviewListPage huntId={id} newReview={newReview} />
-      </div>
+        <div className="bg-[#2A2A2E] border border-[#251B47] rounded-lg p-6 shadow-lg">
+          <h2 className="text-2xl font-semibold text-[#F9C449] mb-4">Avis des utilisateurs</h2>
+          <ReviewListPage huntId={id} newReview={newReview} />
+        </div>
     </div>
   );
 }

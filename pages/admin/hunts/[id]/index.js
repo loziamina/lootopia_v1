@@ -10,6 +10,8 @@ export default function AdminHuntDetail() {
   const { id } = router.query;
   const [hunt, setHunt] = useState(null);
   const [error, setError] = useState('');
+  const [newReview, setNewReview] = useState(null);
+
 
   useEffect(() => {
     if (id) fetchHunt();
@@ -57,8 +59,8 @@ export default function AdminHuntDetail() {
         </div>
 
         <div className="bg-[#2A2A2E] border border-[#251B47] rounded-lg p-6 shadow-lg">
-          <h2 className="text-2xl font-semibold text-[#F9C449] mb-4">🗂 Avis des utilisateurs</h2>
-          <ReviewListPage huntId={id} />
+          <h2 className="text-2xl font-semibold text-[#F9C449] mb-4">Avis des utilisateurs</h2>
+          <ReviewListPage huntId={id} newReview={newReview} />
         </div>
       </div>
     </div>

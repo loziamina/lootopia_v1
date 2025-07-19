@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { AuthContext } from '../../components/contexts/AuthContext'; // ⬅️ Contexte global
+import { AuthContext } from '../../components/contexts/AuthContext';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ export default function Signup() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const { login } = useContext(AuthContext); // ⬅️ Récupère la fonction login()
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,9 +34,8 @@ export default function Signup() {
       });
 
       const { token } = response.data;
-
-      login(token); // ⬅️ Connecte automatiquement l'utilisateur
-      router.push('/'); // Redirection après inscription réussie
+      login(token);
+      router.push('/');
     } catch (err) {
       setError("Erreur lors de l'inscription. Vérifiez vos informations.");
       console.error("Signup error:", err);
@@ -45,52 +44,66 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1B1B1F] to-[#2A2A2E] flex justify-center items-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-4 text-center text-[#251B47]">Créer un compte</h2>
+      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#251B47]">Créer un compte</h2>
 
         {error && <div className="text-red-500 mb-4 text-sm">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Prénom"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="block text-sm font-medium text-gray-700"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Nom"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="block text-sm font-medium text-gray-700"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="block text-sm font-medium text-gray-700"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Mot de passe"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="block text-sm font-medium text-gray-700"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirmer le mot de passe"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="block text-sm font-medium text-gray-700"
-            required
-          />
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Prénom</label>
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Nom</label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Mot de passe</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-[#32A67F] focus:border-[#32A67F] text-black"
+              required
+            />
+          </div>
 
           <button
             type="submit"

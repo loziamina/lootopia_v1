@@ -14,6 +14,8 @@ export default function Home() {
       return;
     }
 
+    let userRole = null;
+
     fetch('/api/me', {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -21,34 +23,39 @@ export default function Home() {
         if (!res.ok) throw new Error('Unauthorized');
         return res.json();
       })
-      .then((data) => setFirstName(data.firstName))
+      .then((data) => {
+        setFirstName(data.firstName);
+        userRole = data.role;
+
+        if (userRole !== 'admin') {
+          fetch('/api/admin/hunts/hunts', {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error('Erreur serveur');
+              return res.json();
+            })
+            .then((data) => {
+              if (Array.isArray(data)) {
+                setJoinedHunts(data);
+              } else {
+                setJoinedHunts([]);
+              }
+            })
+            .catch(() => {
+              setJoinedHunts([]);
+            });
+        } else {
+          setJoinedHunts([]);
+        }
+      })
       .catch(() => {
         localStorage.removeItem('token');
         router.push('/auth/login');
       });
-
-    fetch('/api/users/hunts', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Erreur serveur');
-        return res.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setJoinedHunts(data);
-        } else {
-          console.error('Format inattendu de la réponse :', data);
-          setJoinedHunts([]);
-        }
-      })
-      .catch((err) => {
-        console.error('Erreur lors du chargement des chasses :', err);
-        setJoinedHunts([]);
-      });
   }, []);
 
-   return (
+  return (
     <div className="flex flex-col gap-4 text-sm">
       <h2 className="text-4xl font-semibold mb-6 text-purple-400">Aventures en cours</h2>
       <JoinCardStatus joinedHunts={joinedHunts} />
